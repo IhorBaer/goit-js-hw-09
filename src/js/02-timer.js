@@ -41,7 +41,7 @@ function onCloseFunction(date) {
 function onStartClick() {
   refs.startButton.disabled = isDisabled;
   refs.inputEl.disabled = isDisabled;
-  fp.destroy();
+  // fp.destroy();
   calculationStart();
 }
 
