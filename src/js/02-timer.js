@@ -1,6 +1,5 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const options = {
@@ -23,6 +22,7 @@ const refs = {
 };
 const isDisabled = true;
 let chosenDate = Date.now();
+let timerId = null;
 
 refs.startButton.disabled = isDisabled;
 refs.startButton.addEventListener('click', onStartClick);
@@ -40,14 +40,22 @@ function onCloseFunction(date) {
 
 function onStartClick() {
   refs.startButton.disabled = isDisabled;
-  fp.destroy();
   refs.inputEl.disabled = isDisabled;
+  fp.destroy();
   calculationStart();
 }
 
 function calculationStart() {
-  setInterval(() => {
-    const restTime = convertMs(chosenDate - Date.now());
+  timerId = setInterval(() => {
+    const outTime = chosenDate - Date.now();
+
+    const restTime = convertMs(outTime);
+
+    if (outTime <= 0) {
+      clearInterval(timerId);
+      refs.inputEl.disabled = !isDisabled;
+      return;
+    }
     markupChange(restTime);
   }, 1000);
 }
